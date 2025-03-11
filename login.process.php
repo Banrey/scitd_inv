@@ -17,7 +17,8 @@ WHERE
         mysqli_stmt_bind_param($statement_check, "ss", $username, $password);
         
         $username = $_POST['username'];
-        $password = $_POST['password'];
+        $password = md5($_POST['password']);
+        
         mysqli_stmt_execute($statement_check);
         
         mysqli_stmt_bind_result($statement_check, $ctr, $userID, $username);
@@ -33,7 +34,8 @@ WHERE
             
             }
             else{
-                header("location: index.php?login=failed");
+                $url = "location: index.php?login=failed".$password;
+                header($url);
             }
         }
 

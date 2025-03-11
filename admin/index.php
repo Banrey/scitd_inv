@@ -16,13 +16,13 @@
                         </div>
                         <div class="card-body">
                             <div class="form-group">
-                                 <label>E-mail Address</label>   
+                                 <label>Username</label>   
                                 <input value="admin" type="text" id="Username" class="form-control rounded" placeholder="E-mail" > 
                             </div>
 
                             <div class="form-group ">
                                 <label>Password</label>   
-                                <input value="pass" type="Password" id="Password" class="form-control rounded" placeholder="Password" > 
+                                <input value="admin" type="Password" id="Password" class="form-control rounded" placeholder="Password" > 
                                 
                             </div>
 
@@ -59,7 +59,7 @@
 
                 else {
                     
-                    $.post("process.login.php", {
+                    $.post("../login.process.php", {
                         uname: username,
                         pword: password
                     }, function(data,status) {                        
