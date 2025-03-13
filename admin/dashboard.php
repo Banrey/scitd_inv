@@ -56,7 +56,7 @@
                                 Password Confirm
                             </label>
 
-                            <!-- form validation alphanumirec + symbols -->
+                            <!-- form validation password confirmation -->
                             <input type="password" id="PasswordConfirm" class="form-control rounded" placeholder="Password Confirmation" data-parsley-minlength = "6" data-parsley-maxlength = "12" data-parsley-pattern="/^[a-zA-Z\s]+$/" data-parsley-equalto="#Password" required tabindex="3">
                         </div>
 
@@ -65,7 +65,7 @@
                             First Name
                             </label>
 
-                            <!-- form validation alphanumirec + symbols -->
+                            <!-- form validation letters only -->
                             <input type="fname" id="Fname" name="fname" class="form-control rounded" placeholder="First Name" data-parsley-pattern="/^[a-zA-Z ]*$/" required tabindex="4">
                         </div>
 
@@ -74,7 +74,7 @@
                             Last Name
                             </label>
 
-                            <!-- form validation alphanumirec + symbols -->
+                            <!-- form validation letters only -->
                             <input type="lname" id="Lname" name="lname" class="form-control rounded" placeholder="Last Name" data-parsley-pattern="/^[a-zA-Z ]*$/" required tabindex="5">
                         </div>
 
@@ -83,7 +83,7 @@
                             Age
                             </label>
 
-                            <!-- form validation alphanumirec + symbols -->
+                            <!-- form validation digits only -->
                             <input type="age" id="Age" name="age" class="form-control rounded" placeholder="Age" data-parsley-type="digits" required tabindex="6">
                         </div>
 
@@ -92,7 +92,7 @@
                             Position
                             </label>
 
-                            <!-- form validation alphanumirec + symbols -->
+                            <!-- form validation alphabet only -->
                             <input disabled value= "Supervisor" type="position" id="Position" name="position" class="form-control rounded" placeholder="position" required tabindex=""7>
                         </div>
 
@@ -101,7 +101,7 @@
                             Contact Number
                             </label>
 
-                            <!-- form validation alphanumirec + symbols -->
+                            <!-- form validation numbers only -->
                             <input type="contactno" id="Contactno" name="contactno" class="form-control rounded" placeholder="Contact Number" data-parsley-type="digits" required tabindex="8">
                         </div>
 
