@@ -164,12 +164,12 @@ materials.php
 
         function typeChange(){
             document.getElementById("typeID").value = document.getElementById("type").value
-           // alert(document.getElementById("typeID").value);
+           // Match typeID to typeName to display onto the selection
         } 
 
         function modChange(){
             document.getElementById("modelID").value = document.getElementById("model").value
-           // alert(document.getElementById("typeID").value);
+           // Match modelID to modelName to display onto the selection
         }
 
         
