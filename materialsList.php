@@ -1,5 +1,4 @@
 <?php
-
 include_once("classes/Crud.php");
 include_once("classes/Materials.php");
 include("conn.php");
@@ -37,7 +36,7 @@ $mats = new Materials();
         <div class="container-fluid p-3">
             <div class="card card-login col-md-8">
                 <div class="card-body">
-                <h2>Borrow Material</h2>
+                <h2>List Of Materials</h2>
 
                     <p class="lead"> 
                         <!-- Materials page dialogue here --> 
@@ -102,7 +101,7 @@ $mats = new Materials();
                                     echo "<td>".$res['materialName']."</td>";
                                     echo "<td>".$res['modelName']."</td>";
                                     echo "<td>".$res['availability']."</td>";	
-                                    echo "<td><a href=\"borrow.php?materialID=$res[materialID]\">Borrow</a> | <a href=\"return.php?materialID=$res[materialID]\" onClick=\"return confirm('Are you sure you want to return?')\">Return</a></td>";
+                                    echo "<td><a href=\"borrow.process.php?materialName=$res[materialName]\">Borrow</a> | <a href=\"return.php?materialID=$res[materialID]\" onClick=\"return confirm('Are you sure you want to return?')\">Return</a></td>";
                                     } 
                                 
                             } else {

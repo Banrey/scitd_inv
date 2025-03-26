@@ -6,8 +6,56 @@ include("conn.php");
 
 $crud = new Crud();
 $mats = new Materials();
+$bor = new Borrow();
 
-//echo '<pre>'; print_r($result); exit;
+
+if (empty($_SESSION["borrowList"])) {
+	
+	//failed to get material ID code
+
+    echo "Phac YU";
+    ?>
+<script>
+    </script>
+    <?php
+exit();
+    
+} else {
+
+    $sqlStart = "SELECT COUNT(m.materialID) as ctr, m.materialID, m.materialName, m.availability, md.modelName, t.typeName
+            FROM materials m 
+            JOIN materialmodel md ON m.modelID = md.modelID 
+            JOIN materialtype t ON m.typeID = t.typeID 
+            WHERE (m.materialName = ? ";
+
+            
+
+            foreach ($_SESSION["borrowList"] as $m) {
+                $sqlStart = $crud->addSql($sqlStart,$m);
+
+            }
+
+            
+
+           // print_r($_SESSION["borrowList"]); debugging tools
+           // print_r($sqlStart);
+
+            
+            
+            $sqlEnd = " ) AND m.availability = 'available' GROUP BY m.materialName ORDER BY materialID ASC"; 
+
+            $sql = $sqlStart.$sqlEnd;
+    $result = $crud->search($sql, "hi");
+
+    foreach($result as $key => $res){
+        $mats->set_materialID($res["materialID"]);
+        $mats->set_materialName($res["materialName"]);
+        $mats->set_typeName(typeName: $res["typeName"]);
+    }
+
+    
+}
+
 ?>
 
 
@@ -60,32 +108,50 @@ $mats = new Materials();
                             <!-- form validation alphanumeric + symbols -->
                             <input type="lname" id="Lname" name="lname " class="form-control rounded" placeholder="Last Name" data-parsley-pattern="/[a-zA-Z\s]+/gm" required tabindex= "<?php echo $TI, $TI++;?>" >
                         </div>    
-
-
-                    <div class="form-group col-3">                            
-                    <label for="Available">Material Name</label>
-                        <input type="number" id="Available" name="available" class="form-control rounded col-3" placeholder="Available Qty" data-parsley-pattern="/\w+/gm">
-                    </div>
-                    
-
-                    <div id="materialDetails" class="container">
-
-
-                    </div>
+                        
+    <div class="container col-lg-12">
+                                
+        <table class="table position-relative" >
+    
+        <tr>
+      <th scope="col">materialID</th>
+      <th scope="col">materialName</th>
+      <th scope="col">modelName</th>
+      <th scope="col">typeName</th>
+      <th scope="col">units available</th>
+      <th scope="col">units to borrow</th>
+    </tr>
+  </thead>
+            <?php
 
                         
+        if (!empty($result)){
+            foreach ($result as $key => $res) {
+                
+                echo "<tr>";
+                    echo "<td>".$res['materialID']."</td>";
+                    echo "<td>".$res['materialName']."</td>";
+                    echo "<td>".$res['modelName']."</td>";
+                    echo "<td>".$res['typeName']."</td>";
+                    echo "<td>".$res['ctr']."</td>";
+                    echo "<td><input type = \"number\" min=\"1\" max=\"".$res['ctr']."\" value=\"1\"></td>";
+            
+                    echo "</tr>";	
+                    echo "</div>";
 
-                        
-                        
-                            
-                        
+                   
+            } 
+            
+            echo "<a href=\"materialsList.php\">Add Item</a>";
+            echo "<a href=\"borrow.process.php?action=clearList\">Clear List</a>";
+           
 
-                        <div class="form-group col-3">
-                        
-                            <label for="Username">Material Quantity</label>
-                            <!-- form validation digits -->
-                            <input type="number" id="Quantity" name="quantity" class="form-control rounded " placeholder="Quantity" data-parsley-type="digits" required tabindex="<?php echo $TI, $TI++;?>">
-                        </div>
+
+            
+        } else {
+            echo "No results :(";
+        }
+?>
 
                         <div class="form-group text-right">
                             
@@ -96,11 +162,6 @@ $mats = new Materials();
                         </div>
                     </form>
                     <!-- Register backend code -->
-
-                    
-                    
-
-
                 </div>
             </div>
         </div>
@@ -120,30 +181,9 @@ $mats = new Materials();
         window.location.assign("searchAvailable.php"); 
         };  
 
-        function matChange(){     
-            document.getElementById("materialID").value = document.getElementById("material").value  
-
-            document.getElementById("materialDetails").innerHTML = `
-            <div class="form-group col-6">                            
-                                <label for="Matname">Material Type</label>
-                                <input type="materialType" id="materialType" name="materialType" class="form-control rounded" placeholder="<?php echo $models[1];?>" disabled>
-                        </div>
-                        
-                        <div class="form-group col-6">                            
-                                <label for="Matname">Material Model</label>
-                                <input type="materialModel" id="materialModel" name="materialModel" class="form-control rounded" placeholder="Material Model" disabled>
-                        </div>
-            `
-        } 
 
     </script>
 
-    <script>    
-        $(document).ready(function() {
-        $('.js-example-basic-single').select2();
-        });      
-                                  
-    </script>
 
 
  

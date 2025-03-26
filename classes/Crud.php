@@ -74,6 +74,14 @@ class Crud extends DbConfig
 		
 		return $rows;
 	}
+
+	public function addSql(String $query, $value)	{	
+		
+		$newSql = $query."OR m.materialName = '".$value."'";
+
+		return $newSql;
+
+	}
 	
 	public function escape_string($value)
 	{
