@@ -101,9 +101,9 @@ class Models {
     return $this->materialValues;
   }
 
-  function add_borrowlist($borrowlist) {
+  function add_borrowlist($materialName, $qty) {
    
-    $this->borrowlist[] = $borrowlist;
+    $this->borrowlist[$materialName] = $qty;
   }
 
   function set_borrowlist(array $list) {

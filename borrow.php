@@ -30,7 +30,7 @@ exit();
 
             
 
-            foreach ($_SESSION["borrowList"] as $m) {
+            foreach ($_SESSION["borrowList"] as $m=>$q) {
                 $sqlStart = $crud->addSql($sqlStart,$m);
 
             }
@@ -45,7 +45,8 @@ exit();
             $sqlEnd = " ) AND m.availability = 'available' GROUP BY m.materialName ORDER BY materialID ASC"; 
 
             $sql = $sqlStart.$sqlEnd;
-    $result = $crud->search($sql, "hi");
+    $result = $crud->search($sql, array_key_first($_SESSION["borrowList"])); 
+    // print_r($sql); //debugging, print SQL code
 
     foreach($result as $key => $res){
         $mats->set_materialID($res["materialID"]);
@@ -93,7 +94,7 @@ exit();
                     <!-- Register backend code start -->
 
                     <?php $TI = 1; ?> <!-- tab index tracker cuz im lezy -->                    
-                    <form data-parsley-validate autocomplete="on" action="materials.process.php" method="POST" id="register_form" > <!-- auto complete, process is in: [register.process.php] -->
+                    <form data-parsley-validate autocomplete="on" action="borrow.process.php?action=checkout" method="POST" id="register_form" > <!-- auto complete, process is in: [register.process.php] -->
                     
                     <div class="form-group">
                             
@@ -106,7 +107,14 @@ exit();
                             
                             <label for="Matname">Last Name</label>
                             <!-- form validation alphanumeric + symbols -->
-                            <input type="lname" id="Lname" name="lname " class="form-control rounded" placeholder="Last Name" data-parsley-pattern="/[a-zA-Z\s]+/gm" required tabindex= "<?php echo $TI, $TI++;?>" >
+                            <input type="lname" id="Lname" name="lname" class="form-control rounded" placeholder="Last Name" data-parsley-pattern="/[a-zA-Z\s]+/gm" required tabindex= "<?php echo $TI, $TI++;?>" >
+                        </div>      
+
+                    <div class="form-group">
+                            
+                            <label for="Matname">Date & Time</label>
+                            <!-- form validation alphanumeric + symbols -->
+                            <input type="datetime-local" id="Date" name="date" class="form-control rounded" placeholder="Borrow Date" required tabindex= "<?php echo $TI, $TI++;?>" >
                         </div>    
                         
     <div class="container col-lg-12">
@@ -134,22 +142,23 @@ exit();
                     echo "<td>".$res['modelName']."</td>";
                     echo "<td>".$res['typeName']."</td>";
                     echo "<td>".$res['ctr']."</td>";
-                    echo "<td><input type = \"number\" min=\"1\" max=\"".$res['ctr']."\" value=\"1\"></td>";
+                    echo "<td><input type = \"number\" min=\"1\" max=\"".$res['ctr']."\" value=\"1\" name=\"".$res['materialName']."Qty\" )></td>";
             
                     echo "</tr>";	
                     echo "</div>";
 
+
                    
             } 
             
-            echo "<a href=\"materialsList.php\">Add Item</a>";
-            echo "<a href=\"borrow.process.php?action=clearList\">Clear List</a>";
+            echo "<a href=\"materialsList.php\">Add Item</a></br>"; //add item page link 
+            echo "<a href=\"borrow.process.php?action=clearList\">Clear List</a>"; //Clear the list link
            
 
 
             
         } else {
-            echo "No results :(";
+            echo "No results :("; 
         }
 ?>
 
@@ -157,7 +166,7 @@ exit();
                             
                             <!-- register button -->
                             <button class="btn btn-warning my-2" tabindex="<?php echo $TI, $TI++;?>">
-                                Register 
+                                Check Out 
                             </button>
                         </div>
                     </form>
@@ -171,11 +180,7 @@ exit();
     <script>    
            
         
-        function newType() {
-           // document.getElementById("MatModelDiv").innerHtml = "hi"
-
-    
-        };
+       
 
         function newModel() {
         window.location.assign("searchAvailable.php"); 

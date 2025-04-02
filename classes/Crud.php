@@ -82,6 +82,16 @@ class Crud extends DbConfig
 		return $newSql;
 
 	}
+
+	public function checkOut(String $query, $val1, $val2) {
+		
+		$stmt = $this->connection->prepare($query);
+		$stmt->bind_param("si", $bname, $userID);
+		$bname = $val1;
+		$userID = $val2;
+		print_r($stmt);
+		$stmt->execute();	
+	}
 	
 	public function escape_string($value)
 	{
