@@ -83,13 +83,30 @@ class Crud extends DbConfig
 
 	}
 
+	public function addListSql(String $query, String $matName, int $qty)	{	
+		
+		$newSql = $query." INSERT INTO `transactionlist` (materialName, qty, transID) VALUES ('".$matName."', ".$qty.", @ctr);";
+
+		return $newSql;
+
+	}
+
+	public function insertMultiple(String $sql){
+		if ($this->connection->multi_query($sql) === TRUE) {
+			echo "New records created successfully";
+		  } else {
+			echo "Error: " . $sql . "<br>" . $this->connection->error;
+		  }
+
+	}
+
 	public function checkOut(String $query, $val1, $val2) {
 		
 		$stmt = $this->connection->prepare($query);
 		$stmt->bind_param("si", $bname, $userID);
 		$bname = $val1;
 		$userID = $val2;
-		print_r($stmt);
+		//print_r($stmt); debugging show stmt
 		$stmt->execute();	
 	}
 	

@@ -56,6 +56,7 @@ exit();
 
     
 }
+$date = time();
 
 ?>
 
@@ -98,31 +99,44 @@ exit();
                     
                     <div class="form-group">
                             
-                            <label for="Matname">First Name</label>
+                            <label for="First Name">First Name</label>
                             <!-- form validation alphanumeric + symbols -->
                             <input type="fname" id="Fname" name="fname" class="form-control rounded" placeholder="First Name" data-parsley-pattern="/[a-zA-Z\s]+/gm" required tabindex= "<?php echo $TI, $TI++;?>" >
                         </div>     
 
                     <div class="form-group">
                             
-                            <label for="Matname">Last Name</label>
+                            <label for="Last Name">Last Name</label>
                             <!-- form validation alphanumeric + symbols -->
                             <input type="lname" id="Lname" name="lname" class="form-control rounded" placeholder="Last Name" data-parsley-pattern="/[a-zA-Z\s]+/gm" required tabindex= "<?php echo $TI, $TI++;?>" >
                         </div>      
-
-                    <div class="form-group">
+                        <div class="row">
+                        <div class="form-group col-7">
                             
-                            <label for="Matname">Date & Time</label>
+                            <label for="Date">Date</label>
                             <!-- form validation alphanumeric + symbols -->
-                            <input type="datetime-local" id="Date" name="date" class="form-control rounded" placeholder="Borrow Date" required tabindex= "<?php echo $TI, $TI++;?>" >
-                        </div>    
+                            <input type="date" id="Date" name="date" value="<?php echo date("Y-m-d",$date); ?>" class="form-control rounded" placeholder="Borrow Date" required tabindex= "<?php echo $TI, $TI++;?>" >
+                        </div> 
+                        <button class = "btn btn-warning my-4 col-2 h-100" type = "button">Sort by Date</button> 
+
+                        <div class="form-group col-7 mx-1 row">
+                            
+                            <label for="Time">Time</label>
+                            <!-- form validation alphanumeric + symbols -->
+                            <input type="time" id="timeStart" class="w-25 form-control rounded" name="timeStart" value="<?php echo date("h:i",$date); ?>" placeholder="Borrow Time Start" required tabindex= "<?php echo $TI, $TI++;?>" >
+                            <p class="m-1">Until</p>
+                            <input type="time" id="timeEnd" class="w-25 form-control rounded" name="timeEnd" value="<?php echo date("h:i",$date+3600); ?>" placeholder="Borrow Time End" required tabindex= "<?php echo $TI, $TI++;?>" >
+                            
+                        </div> 
+
+                        </div>  
                         
     <div class="container col-lg-12">
                                 
         <table class="table position-relative" >
     
         <tr>
-      <th scope="col">materialID</th>
+      <th scope="col">materialID</th>   
       <th scope="col">materialName</th>
       <th scope="col">modelName</th>
       <th scope="col">typeName</th>
@@ -180,11 +194,7 @@ exit();
     <script>    
            
         
-       
-
-        function newModel() {
-        window.location.assign("searchAvailable.php"); 
-        };  
+    
 
 
     </script>
