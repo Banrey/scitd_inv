@@ -12,9 +12,25 @@ $bor = new Borrow();
 
 
 if (!empty($_GET["action"])&& $_GET["action"] == "checkout"  ) { //checkout code
+    
+    $time_startString = $_POST["date"]." ".$_POST["timeStart"];
+    $time_endString =  $_POST["date"]." ".$_POST["timeEnd"];
 
-    $query =  "INSERT INTO transactions (bname, userID)
-                VALUES (?, ?);";
+    echo $time_endString;
+
+    $end_d=strtotime($time_endString);
+    $start_d=strtotime($time_startString);
+
+    $startDate = date("Y-m-d g:i:s", $start_d);
+    $endDate = date("Y-m-d g:i:s", $end_d);
+
+
+
+
+    $query =  "INSERT INTO transactions (bname, userID, time_start, time_end)
+                VALUES (?, ?, '".$startDate."', '".$endDate."');";
+
+    echo $query;
    
     
     $bname = $_POST["fname"]." ".$_POST["lname"];
@@ -55,7 +71,12 @@ if (!empty($_GET["action"])&& $_GET["action"] == "checkout"  ) { //checkout code
     <?php
 
    exit();
-} else {
+} elseif (!empty($_GET["action"])&& $_GET["action"] == "searchbydate"  ) {
+    $date = strtotime($_POST["date"]) ;
+    $date2 = $date;
+
+    exit;
+}else {
     
 }
 

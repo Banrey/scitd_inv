@@ -82,6 +82,13 @@ class Crud extends DbConfig
 		return $newSql;
 
 	}
+	public function addReserveSql(String $query, $value)	{	
+		
+		$newSql = $query."OR tl.materialName = '".$value."'";
+
+		return $newSql;
+
+	}
 
 	public function addListSql(String $query, String $matName, int $qty)	{	
 		

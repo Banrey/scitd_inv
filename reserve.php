@@ -8,6 +8,8 @@ $crud = new Crud();
 $mats = new Materials();
 $bor = new Borrow();
 
+$date = time();
+
 
 if (empty($_SESSION["borrowList"])) {
 	
@@ -22,45 +24,47 @@ if (empty($_SESSION["borrowList"])) {
     <?php
 exit();
     
+}   if(isset($_GET["date"])) { //set date if search date is available    
+   $date = $_GET["date"];
+    
+   $date = strtotime($date);
+
 }
 
-else{
+$sqlStart = "SELECT tl.materialName, (SELECT COUNT(materialID)-SUM(qty) FROM materials WHERE materialName = tl.materialName) units_available, bname
+FROM transactionlist tl
+JOIN transactions tr ON tl.transID = tr.transID
+WHERE tr.time_start < '".date("Y-m-d h:i",$date)."' AND tr.status = 'pending' AND (tl.materialName = ? ";   
 
-    $sqlStart = "SELECT COUNT(m.materialID) as ctr, m.materialID, m.materialName, m.availability, md.modelName, t.typeName
-            FROM materials m 
-            JOIN materialmodel md ON m.modelID = md.modelID 
-            JOIN materialtype t ON m.typeID = t.typeID 
-            WHERE (m.materialName = ? ";
 
+    
             
 
             foreach ($_SESSION["borrowList"] as $m=>$q) {
-                $sqlStart = $crud->addSql($sqlStart,$m); //add more items from list
+                $sqlStart = $crud->addReserveSql($sqlStart,$m); //add more items from list
 
             }
+
+
+
+//             set @time_start = '2025-05-08';
 
             
 
            // print_r($_SESSION["borrowList"]); debugging tools
-           // print_r($sqlStart);
+            //print_r($sqlStart);
 
             
             
-            $sqlEnd = " ) AND m.availability = 'available' GROUP BY m.materialName ORDER BY materialID ASC"; 
+            $sqlEnd = ") ;"; 
 
             $sql = $sqlStart.$sqlEnd;
     $result = $crud->search($sql, array_key_first($_SESSION["borrowList"])); 
     // print_r($sql); //debugging, print SQL code
 
-    foreach($result as $key => $res){ //set variables for each key
-        $mats->set_materialID($res["materialID"]);
-        $mats->set_materialName($res["materialName"]);
-        $mats->set_typeName(typeName: $res["typeName"]);
-    }
-
     
-}  
-$date = time();
+
+ 
 
 // echo date("Y-m-d g:i",$date); //debugging show time
 
@@ -93,7 +97,7 @@ $date = time();
         <div class="container-fluid p-3">
             <div class="card card-login col-lg-6 col-md-8">
                 <div class="card-body">
-                <h2>Borrow Material</h2>
+                <h2>Reserve Material</h2>
 
                     <p class="lead"> 
                         <!-- Materials page dialogue here --> 
@@ -119,14 +123,20 @@ $date = time();
 
                     <div class="form-group">                            
                         <label for="timeStart">Time Start</label>
-                        <input type="time" id="timeStart" class="w-25 form-control rounded" name="timeStart" value="<?php echo date("h:i",$date); ?>" placeholder="Borrow Time Start" required tabindex= "<?php echo $TI, $TI++;?>" >
+                        <input type="datetime-local" id="timeStart" class="w-25 form-control rounded" name="datetimeStart" value="<?php echo date("Y-m-d h:i",$date); ?>" placeholder="Borrow Time Start" required tabindex= "<?php echo $TI, $TI++;?>" >
+                        
                     </div>      
 
                         <div class="form-group">
                             <label for="timeEnd">Time End</label>
-                            <input type="time" id="timeEnd" class="w-25 form-control rounded" name="timeEnd" value="<?php echo date("h:i",$date+3600); ?>" placeholder="Borrow Time End" required tabindex= "<?php echo $TI, $TI++;?>" >
+                            <input type="datetime-local" id="timeEnd" class="w-25 form-control rounded" name="datetimeEnd" value="<?php echo date("Y-m-d h:i",$date+86400); ?>" placeholder="Borrow Time End" required tabindex= "<?php echo $TI, $TI++;?>" >
                             
                         </div> 
+
+                        <button class="btn btn-warning my-2"type="button" onclick="dateSearch()" tabindex="<?php echo $TI, $TI++;?>">
+                                Check Available
+                            </button>
+
 
                         
     <div class="container col-lg-12">
@@ -134,10 +144,7 @@ $date = time();
         <table class="table position-relative" >
     
                 <tr>
-            <th scope="col">materialID</th>   
             <th scope="col">materialName</th>
-            <th scope="col">modelName</th>
-            <th scope="col">typeName</th>
             <th scope="col">units available</th>
             <th scope="col">units to borrow</th>
             </tr>
@@ -149,12 +156,9 @@ $date = time();
             foreach ($result as $key => $res) {
                 
                 echo "<tr>";
-                    echo "<td>".$res['materialID']."</td>";
                     echo "<td>".$res['materialName']."</td>";
-                    echo "<td>".$res['modelName']."</td>";
-                    echo "<td>".$res['typeName']."</td>";
-                    echo "<td>".$res['ctr']."</td>";
-                    echo "<td><input type = \"number\" min=\"1\" max=\"".$res['ctr']."\" value=\"1\" name=\"".$res['materialName']."Qty\" )></td>";
+                    echo "<td>".$res['units_available']."</td>";
+                    echo "<td><input type = \"number\" min=\"0\" max=\"".$res['units_available']."\" value=\"".$res['units_available']."\" name=\"".$res['materialName']."Qty\" )></td>";
             
                     echo "</tr>";	
                     echo "</div>";
@@ -190,19 +194,23 @@ $date = time();
     </body>
 
     <script>    
-           
+    function dateSearch(){
+        let date = document.getElementById("timeStart").value;
+       
+        window.location.replace("reserve.php?date=".concat(date));
+
+        }    
         
+        $(document).ready(function() {
+            $(window).keydown(function(event){
+                if(event.keyCode == 13) {
+                event.preventDefault();
+                return false;
+                }
+            });
+        });
     
 
 
-    </script>
-
-
-
- 
-   
-
-						
-							
-						
+    </script>						
 </html>
