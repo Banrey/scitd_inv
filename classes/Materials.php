@@ -118,4 +118,35 @@ class Models {
   }
 
 }
+
+
+class Reserve{
+  public $reservelist = [];
+  public $materialValues = array("materialID"=>"null", "materialName"=>"null", "materialType"=>"null", "materialModel"=>"null", "availability"=>"null" );
+
+  function set_materialValues($key, $value) {
+    $this->materialValues[$key] = $value;
+}
+
+function get_materialValues() {
+  return $this->materialValues;
+}
+
+function add_reservelist($materialName, $qty) {
+ 
+  $this->reservelist[$materialName] = $qty;
+}
+
+function set_reservelist(array $list) {
+   $this->reservelist = $list;
+}
+function get_reservelist($index) {
+  return $this->reservelist[$index];
+}
+
+function dumpList() {
+  return $this->reservelist;
+}
+
+}
 ?>

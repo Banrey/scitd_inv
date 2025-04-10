@@ -6,12 +6,12 @@ include("conn.php");
 
 $crud = new Crud();
 $mats = new Materials();
-$bor = new Borrow();
+$res = new Reserve();
 
 $date = time();
 
 
-if (empty($_SESSION["borrowList"])) {
+if (empty($_SESSION["reserveList"])) {
 	
 	//failed to get material ID code
 
@@ -31,16 +31,17 @@ exit();
 
 }
 
-$sqlStart = "SELECT tl.materialName, (SELECT COUNT(materialID)-SUM(qty) FROM materials WHERE materialName = tl.materialName) units_available, bname
-FROM transactionlist tl
-JOIN transactions tr ON tl.transID = tr.transID
-WHERE tr.time_start < '".date("Y-m-d h:i",$date)."' AND tr.status = 'pending' AND (tl.materialName = ? ";   
+$sqlStart = "SELECT (SELECT COUNT(materialID) FROM materials WHERE materialName = m.materialName) - @Total := IFNULL( (SELECT SUM(qty) scheduled FROM transactionlist tl JOIN transactions tr ON tr.transID = tl.transID WHERE tr.time_start < '".date("Y-m-d h:i",$date)."' AND materialName = m.materialName), 0) units_available, 
+m.materialName
+
+FROM materials m 
+WHERE (m.materialName = ? " ;
 
 
-    
+//tr.status = 'pending' AND
             
 
-            foreach ($_SESSION["borrowList"] as $m=>$q) {
+            foreach ($_SESSION["reserveList"] as $m=>$q) {
                 $sqlStart = $crud->addReserveSql($sqlStart,$m); //add more items from list
 
             }
@@ -51,15 +52,15 @@ WHERE tr.time_start < '".date("Y-m-d h:i",$date)."' AND tr.status = 'pending' AN
 
             
 
-           // print_r($_SESSION["borrowList"]); debugging tools
+           // print_r($_SESSION["reserveList"]); debugging tools
             //print_r($sqlStart);
 
             
             
-            $sqlEnd = ") ;"; 
+            $sqlEnd = " ) GROUP BY materialName ;"; 
 
             $sql = $sqlStart.$sqlEnd;
-    $result = $crud->search($sql, array_key_first($_SESSION["borrowList"])); 
+    $result = $crud->search($sql, array_key_first($_SESSION["reserveList"])); 
     // print_r($sql); //debugging, print SQL code
 
     

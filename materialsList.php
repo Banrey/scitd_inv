@@ -102,11 +102,14 @@ $mats = new Materials();
                                     echo "<td>".$res['modelName']."</td>";
                                     echo "<td>".$res['availability']."</td>";	
                                     if ($res["availability"] == "available") {
-                                       echo "<td><a href=\"borrow.process.php?materialName=$res[materialName]\">Borrow</a></td>";
+                                        echo "<td><a href=\"borrow.process.php?materialName=$res[materialName]\">Borrow</a></td>";
+                                        echo "<td><a href=\"reserve.process.php?action=reserve&materialName=$res[materialName]\">Reserve</a></td>";
                                     }   else if ($res["availability"] == "pending") {                                        
                                        echo "<td><a href=\"borrow.process.php?action=pickup&materialID=$res[materialID]\">Pick Up</a></td>";
+                                       echo "<td><a href=\"reserve.process.php?action=reserve&materialName=$res[materialName]\">Reserve</a></td>";
                                 
-                                    }   else if ($res["availability"] == "borrowed") {                                        
+                                    }   else if ($res["availability"] == "borrowed") {            
+                                        echo "<td><a href=\"reserve.process.php?action=reserve&materialName=$res[materialName]\">Reserve</a></td>";                            
                                         echo "<td><a href=\"return.php?materialID=$res[materialID]\" onClick=\"return confirm('Are you sure you want to return?')\">Return</a><td>";
                                 
                                     } else {

@@ -84,7 +84,7 @@ class Crud extends DbConfig
 	}
 	public function addReserveSql(String $query, $value)	{	
 		
-		$newSql = $query."OR tl.materialName = '".$value."'";
+		$newSql = $query."OR m.materialName = '".$value."' ";
 
 		return $newSql;
 

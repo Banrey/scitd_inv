@@ -8,6 +8,7 @@ $_SESSION["userID"] = "1";// debugging
 $crud = new Crud();
 $mats = new Materials();
 $bor = new Borrow();
+$res = new Reserve();
 
 
 
@@ -40,7 +41,7 @@ if (!empty($_GET["action"])&& $_GET["action"] == "checkout"  ) { //checkout code
 
     
 
-    foreach ($_SESSION["borrowList"] as $materialName => $qty) {
+    foreach ($_SESSION["borrowList"] as $materialName => $qty) { //show borrow list as table
         $materialNameTrimmed = preg_replace('/\s+/', '_', $materialName); //replace whitespace with _ for accurate key names
 
         $_SESSION["borrowList"][$materialNameTrimmed] = $_POST[$materialNameTrimmed."Qty"]; //add qty because of naming convention used in borrow.php
@@ -90,7 +91,7 @@ if (!empty($_GET["action"])&& $_GET["action"] == "clearList"  ) { //clear list c
      <?php
 }   else{
 
-    if (!empty($_SESSION["borrowList"])) { //add to borrow list code
+    if (!empty($_SESSION["borrowList"])) { //check if borrow lst is empty
         if (in_array($_GET["materialName"],$_SESSION["borrowList"])) {
             ?>
             <script> window.location = "borrow.php"; </script>
@@ -101,7 +102,7 @@ if (!empty($_GET["action"])&& $_GET["action"] == "clearList"  ) { //clear list c
 
     }
     
-    $bor->add_borrowlist($_GET["materialName"],0);
+    $bor->add_borrowlist($_GET["materialName"],0); //add to borrow list 
     
     
     $_SESSION["borrowList"] = $bor->dumpList();
@@ -110,9 +111,7 @@ if (!empty($_GET["action"])&& $_GET["action"] == "clearList"  ) { //clear list c
 
     ?>
     <script> window.location = "borrow.php"; </script>
-    <?php
-
-                   
+    <?php                 
     
 }
 
